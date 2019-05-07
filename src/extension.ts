@@ -4,9 +4,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cp from 'child_process';
 import * as vscode_languageclient from 'vscode-languageclient';
-import { AnyCnameRecord } from 'dns';
+import { commands, window } from 'vscode';
 
-const LANGUAGE_CLIENT_ID = 'xml';
+const LANGUAGE_CLIENT_ID = 'PLSQL';
 const LANGUAGE_CLIENT_NAME = 'PL/SQL Language Client';
 const EXTENSION_START_MSG = 'PL/SQL Language Client Extension started';
 const LANGUAGE_CLIENT_READY_MSG = 'PL/SQL language client and server are ready';
@@ -18,8 +18,9 @@ const LANGUAGE_CLIENT_JAVA_START_PATH = 'Starting language server with java path
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
    console.log(EXTENSION_START_MSG);
-
+   // ibm-xml-
    let serverJarPath = context.asAbsolutePath(path.join('server', 'server-all.jar'));
+   // let serverJarPath = context.asAbsolutePath(path.join('server', 'server-all.jar'));
    console.log(serverJarPath);
 
    // 1. Check if the VSCode settings has defined the "xmlLang.javaHome" property. If the user
@@ -35,7 +36,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       javaVerifierPromise(process.env['JAVA_HOME']).then(
          function (res) {
-            context.subscriptions.push(initLangClient(serverJarPath, res.toString()).start());
+            let disposable = initLangClient(serverJarPath, res.toString()).start();
+            context.subscriptions.push(disposable);
          }
       ).catch(function (rej) {
          console.log(rej);
@@ -89,16 +91,39 @@ function initLangClient(serverJarPath: string, javaPath: string) {
 
    // langClient.on
 
-   langClient.onReady().then(function () {
+   // langClient.onReady().then(function () {
+   //    console.log(LANGUAGE_CLIENT_READY_MSG);
+   //    console.log(langClient);
+   //    // langClient.onNotification('textDocument/didOpen',);
+   // });
+
+
+   let item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
+   item.text = 'Starting PL/SQL Language Server...';
+   toggleItem(vscode.window.activeTextEditor, item);
+
+   langClient.onReady().then(() => {
       console.log(LANGUAGE_CLIENT_READY_MSG);
-      console.log(langClient);
-      // langClient.onNotification('textDocument/didOpen',);
+
+      item.text = LANGUAGE_CLIENT_READY_MSG;
+      toggleItem(vscode.window.activeTextEditor, item);
+
+      window.onDidChangeActiveTextEditor((editor) => {
+         toggleItem(editor, item);
+      });
    });
 
-
-
-
    return langClient;
+}
+
+
+function toggleItem(editor: vscode.TextEditor | undefined, item: vscode.StatusBarItem) {
+   if (editor && editor.document &&
+      (editor.document.languageId === 'sql' || editor.document.languageId === 'plsql')) {
+      item.show();
+   } else {
+      item.hide();
+   }
 }
 
 function javaVerifierPromise(testPath: string | undefined) {
