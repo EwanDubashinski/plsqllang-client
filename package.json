@@ -1,7 +1,7 @@
 {
 	"name": "plsql-lsp",
 	"displayName": "plsql-lsp",
-	"description": "PL/SQL language server",
+	"description": "PLSQL language server",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.29.0"
@@ -14,6 +14,23 @@
    ],
 	"main": "./out/extension.js",
 	"contributes": {
+      "viewsContainers": {
+         "activitybar": [
+           {
+             "id": "oracledb-explorer",
+             "title": "Oracle DB Explorer",
+             "icon": "media/oracle.svg"
+           }
+         ]
+       },
+       "views": {
+         "oracledb-explorer": [
+           {
+             "id": "dbObjects",
+             "name": "Database Objects"
+           }
+         ]
+       },
       "languages": [
           {
               "id": "plsql",

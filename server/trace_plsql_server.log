@@ -1,0 +1,167 @@
+{
+  "jsonrpc": "2.0",
+  "id": 0,
+  "method": "initialize",
+  "params": {
+    "processId": 14272,
+    "rootPath": "c:\\Users\\idubashi\\AppData\\Local\\Programs\\Microsoft VS Code",
+    "rootUri": "file:///c%3A/Users/idubashi/AppData/Local/Programs/Microsoft%20VS%20Code",
+    "capabilities": {
+      "workspace": {
+        "applyEdit": true,
+        "didChangeConfiguration": {
+          "dynamicRegistration": true
+        },
+        "didChangeWatchedFiles": {
+          "dynamicRegistration": true
+        },
+        "symbol": {
+          "dynamicRegistration": true
+        },
+        "executeCommand": {
+          "dynamicRegistration": true
+        }
+      },
+      "textDocument": {
+        "synchronization": {
+          "willSave": true,
+          "willSaveWaitUntil": true,
+          "didSave": true,
+          "dynamicRegistration": true
+        },
+        "completion": {
+          "completionItem": {
+            "snippetSupport": true,
+            "commitCharactersSupport": true
+          },
+          "dynamicRegistration": true
+        },
+        "hover": {
+          "dynamicRegistration": true
+        },
+        "signatureHelp": {
+          "dynamicRegistration": true
+        },
+        "references": {
+          "dynamicRegistration": true
+        },
+        "documentHighlight": {
+          "dynamicRegistration": true
+        },
+        "documentSymbol": {
+          "dynamicRegistration": true
+        },
+        "formatting": {
+          "dynamicRegistration": true
+        },
+        "rangeFormatting": {
+          "dynamicRegistration": true
+        },
+        "onTypeFormatting": {
+          "dynamicRegistration": true
+        },
+        "definition": {
+          "dynamicRegistration": true
+        },
+        "codeAction": {
+          "dynamicRegistration": true
+        },
+        "codeLens": {
+          "dynamicRegistration": true
+        },
+        "documentLink": {
+          "dynamicRegistration": true
+        },
+        "rename": {
+          "dynamicRegistration": true
+        }
+      }
+    },
+    "trace": "off"
+  }
+}
+{
+  "jsonrpc": "2.0",
+  "id": 0,
+  "result": {
+    "capabilities": {
+      "textDocumentSync": 1
+    }
+  }
+}
+{
+  "jsonrpc": "2.0",
+  "method": "initialized",
+  "params": {}
+}
+{
+  "jsonrpc": "2.0",
+  "method": "workspace/didChangeConfiguration",
+  "params": {
+    "settings": {
+      "plsql-lsp": {}
+    }
+  }
+}
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument/didOpen",
+  "params": {
+    "textDocument": {
+      "uri": "file:///c%3A/Source/invspb_ap/invspb-invspb_ap-48bef2396ee4/INVSPB_AP.sql",
+      "languageId": "plsql",
+      "version": 1,
+      "text": "-- INVSPB_AP SPECIFICATION\nCREATE OR REPLACE PACKAGE XXI.INVSPB_AP\n/**\n*\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003cBR/\u003e\n* оюйер хмбепяхх-оерепаспц дкъ тсмйжхи юкэрепмюрхбмни оевюрх.\u003cBR/\u003e\n* онярюбкъеряъ блеяре я нрверюлх юо, бшонкмеммшлх хмбепяхеи-оерепаспц.\n* @AUTHOR CHUFENG\n* @VERSION 10 (18.03.2016)\n* @HEADCOM\n*/\n  IS\n\n/** тсмйжхъ, бнгбпюыючыюъ юдпея йкхемрю\n* @PARAM CUSNUM хдемрхтхйюрнп йкхемрю\n* @PARAM ADRTYPE рхо юдпеяю ( 0 - леярнмюунфдемхъ, 1 - онврнбши, 2 - тюйрхвеяйхи)\n* @PARAM ALG_INLINE юдпея б ндмс ярпнйс (0 - опнярн еякх гюонкмемн онке, 2 - дкъ бяеу мепегхдемрнб)\n* @RETURN тнплюрхпнбюммши юдпея йкхемрю\n*/\n  FUNCTION GETCUSADDR(CUSNUM     IN VCUS.ICUSNUM%TYPE,           -- мнлеп йкхемрю\n                      ADRTYPE    IN CUS_ADDR.ADDR_TYPE%TYPE DEFAULT 1,\n                      ALG_INLINE IN NUMBER                    DEFAULT 0,\n                      IND_PRINT  IN NUMBER                    DEFAULT 1,                 -- RESERVED\n                      CNT_PRINT  IN NUMBER                    DEFAULT 0)                 -- RESERVED\n    RETURN VARCHAR;\n\n/** тсмйжхъ, бнгбпюыючыюъ ярпнйнбне опедярюбкемхе днйслемрю йкхемрю\n* @PARAM CUSNUM хдемрхтхйюрнп йкхемрю\n* @PARAM DOCTYPE рхо днйслемрю\n* @PARAM VTYPE бхгсюкхгюжхъ (0 - мюгбюмхе, дюммше днйслемрю, 1 - дюммше днйслемрю)\n* @RETURN ярпнйнбне опедярюбкемхе днйслемрю\n*/\n  FUNCTION GETCUSDOC(CUSNUM  IN VCUS.ICUSNUM%TYPE,            -- мнлеп йкхемрю\n                     DOCTYPE IN CUS_DOCUM.ID_DOC_TP%TYPE DEFAULT 0, -- рхо днйслемрю\n                     VTYPE   IN NUMBER                     DEFAULT 0  -- бхгсюкхгюжхъ: 0 - мюгбюмхе, дюммше днйслемрю\n  )                                                                   --               1 - дюммше днйслемрю\n    RETURN VARCHAR;\n\n/** тсмйжхъ, янйпюыючыюъ онкмне тхн дн тюлхкхъ х.н.\n* @PARAM FIO ярпнйю я онкмшл тхн\n* @RETURN янйпюыеммне тхн\n*/\n  FUNCTION GETFIO_SH(FIO IN VARCHAR2)\n    RETURN VARCHAR2;\n\n/** дкъ бшбндю пюявермнцн пегепбю он окюрхме (яхрххмбеяраюмй)\n* @PARAM AGRID хдемрхтхйюрнп днцнбнпю\n* @PARAM DEFDATE дюрю пюяверю\n* @RETURN пюявхрюммши пегепб он рг аюмйю\n*/\n  FUNCTION GET_CALC_RESERVE(AGRID   IN NUMBER,\n                            DEFDATE IN DATE)\n    RETURN NUMBER;\n\n/** тсмйжхъ, бнгбпюыючыюъ мнлеп рекетнмю\n* @PARAM CUSNUM хдемрхтхйюрнп йкхемрю\n* @PARAM PHTYPE рхо мнлепю рекетнмю\n* @PARAM PRINT тнплюрхпнбюмхе (0 - яокньмне, 1 - йнд цнпндю б яйнайюу)\n* @RETURN тнплюрхпнбюммши мнлеп рекетнмю\n*/\n  FUNCTION GETCUSPHONE(CUSNUM IN NUMBER,\n                       PHTYPE IN NUMBER DEFAULT 0,\n                       PRINT IN NUMBER DEFAULT 0)\n    RETURN VARCHAR2;\n\n/** онксвемхе дюммшу хг тог, мюопхлеп, ьрюлою\n* юбрнмнлмюъ рпюмгюйжхъ!\n* @PARAM CDEFINT ярпнйнбши хдемрхтхйюрнп тог (бхдем б тнпле)\n* @PARAM CID_1 рхо мнлепю рекетнмю\n* @PARAM CID_2 тнплюрхпнбюмхе (0 - яокньмне, 1 - йнд цнпндю б яйнайюу)\n* @RETURN бшундмни оюпюлерп тог\n*/\n  FUNCTION GET_AC(CDEFINT IN VARCHAR2,\n                  CID_1   IN VARCHAR2 DEFAULT NULL,\n                  CID_2   IN VARCHAR2 DEFAULT NULL)\n    RETURN VARCHAR2;\n\n/**гюонкмемхе рюакхжш ABL дкъ пюяверю йндю 1414 (цнпаюмй)\n* @PARAM DATEFROM дюрю я\n* @PARAM DATETO дюрю он\n* @RETURN 1-сдювю, 0-ньхайю\n*/\n  FUNCTION FILL_1414(DATEFROM IN DATE,\n                     DATETO   IN DATE)\n    RETURN NUMBER;\n\nEND INVSPB_AP;\n/\n-- INVSPB_AP BODY\nCREATE OR REPLACE PACKAGE BODY XXI.INVSPB_AP\n  IS\n  -- оюйер хмбепяхх-оерепаспц дкъ тсмйжхи юкэрепмюрхбмни оевюрх.\n  -- онярюбкъеряъ блеяре я нрверюлх юо, бшонкмеммшлх хмбепяхеи-оерепаспц.\n  -- онддепфйю: DUBASHINSKY@INVERSION.RU\n\n\n  -- онксвюел йпюяхбши юдпея йкхемрю\n\n  /*\n  -- 0 - рхо юдпеяю \u003d леярн мюунфдемхъ\n  -- 1 - рхо юдпеяю \u003d онврнбши\n  -- 2 - рхо юдпеяю \u003d тюйрхвеяйхи\n  */\n  FUNCTION GETCUSADDR(CUSNUM     IN VCUS.ICUSNUM%TYPE,\n                      ADRTYPE    IN CUS_ADDR.ADDR_TYPE%TYPE DEFAULT 1,\n                      ALG_INLINE IN NUMBER                    DEFAULT 0,\n                      IND_PRINT  IN NUMBER                    DEFAULT 1,\n                      CNT_PRINT  IN NUMBER                    DEFAULT 0)\n    RETURN VARCHAR\n    IS\n      ADDRESS VARCHAR2(512);\n      REZ     VARCHAR2(1);\n      CADDR   CUS_ADDR % ROWTYPE;\n    BEGIN\n      -- онксвюел пегхдемярбн:\n      SELECT CCUSREZ\n        INTO REZ\n        FROM CUS\n        WHERE ICUSNUM \u003d CUSNUM;\n      -- онксвюел онкъ CUS_ADDR:\n      SELECT *\n        INTO CADDR\n        FROM CUS_ADDR\n        WHERE ICUSNUM \u003d CUSNUM\n          AND ADDR_TYPE \u003d ADRTYPE;\n\n      IF REZ \u003d \u00272\u0027\n        AND ALG_INLINE \u003d 1\n        OR ALG_INLINE \u003d 0\n        AND CADDR.ADDRESS_INLINE IS NOT NULL\n      THEN\n        ADDRESS :\u003d CADDR.ADDRESS_INLINE;\n      ELSE\n        SELECT DECODE(CADDR.POST_INDEX, NULL, NULL, CADDR.POST_INDEX || \u0027, \u0027) ||\n\n        DECODE(CADDR.COUNTRY, NULL, NULL,\n        (SELECT CCNTRNAME\n           FROM XXI.CNT\n          WHERE CCNTISO \u003d CADDR.COUNTRY) || \u0027, \u0027) ||\n        (SELECT DECODE(CADDR.REG_NAME, NULL, NULL, INITCAP(CADDR.REG_NAME) || \u0027, \u0027)\n           FROM REGION\n          WHERE IREGNUM \u003d CADDR.REG_NUM\n            AND IREGNUM NOT IN (77, 78, 92)) ||\n        DECODE(TRIM(CADDR.AREA), NULL, NULL, CADDR.AREA || \u0027 пюинм, \u0027) ||\n        DECODE(CADDR.PUNCT_TYPE, NULL, NULL, CADDR.PUNCT_TYPE || \u0027 \u0027) ||\n        DECODE(CADDR.PUNCT_NAME, NULL, NULL, CADDR.PUNCT_NAME) || CASE WHEN CADDR.REG_NUM IN (77, 78, 92) THEN DECODE(CADDR.REG_NUM, 77, \u0027ц.лняйбю\u0027,\n                78, \u0027ц.яюмйр-оерепаспц\u0027,\n                92, \u0027ц.яебюярнонкэ\u0027) || CASE WHEN CADDR.CITY IS NOT NULL AND\n                      LOWER(CADDR.CITY) NOT LIKE \u0027%яюмйр%\u0027 AND\n                      LOWER(CADDR.CITY) NOT LIKE \u0027%лняйбю%\u0027 AND\n                      LOWER(CADDR.CITY) NOT LIKE \u0027%яебюярнонкэ%\u0027 THEN CASE WHEN SUBSTR(TRIM(CADDR.CITY), -2, 2) \u003d \u0027 ц\u0027 THEN REPLACE(\u0027, ц.\u0027 || CADDR.CITY, \u0027 ц\u0027) ELSE \u0027, \u0027 || CADDR.CITY END ELSE \u0027\u0027 END WHEN SUBSTR(TRIM(CADDR.CITY), -2, 2) \u003d \u0027 ц\u0027 THEN REPLACE(\u0027ц.\u0027 || CADDR.CITY, \u0027 ц\u0027) ELSE CADDR.CITY END ||\n        DECODE(CADDR.INFR_TYPE || CADDR.INFR_NAME, \u0027\u0027, NULL, \u0027, \u0027) ||\n        DECODE(CADDR.INFR_TYPE, NULL, NULL, CADDR.INFR_TYPE || \u0027. \u0027) ||\n        DECODE(CADDR.INFR_NAME, NULL, NULL, CADDR.INFR_NAME) ||\n        DECODE(CADDR.DOM, NULL, NULL, \u0027, д.\u0027 || CADDR.DOM) ||\n        DECODE(CADDR.KORP, NULL, \u0027\u0027, \u0027, й.\u0027) ||\n        CADDR.KORP || DECODE(CADDR.STROY, NULL, \u0027\u0027, \u0027, ярп.\u0027) ||\n        CADDR.STROY || DECODE(CADDR.KV, NULL, \u0027\u0027, \u0027, йб.\u0027) ||\n        CADDR.KV || DECODE(CADDR.OFFICE, NULL, \u0027\u0027, \u0027, нт.\u0027) ||\n        CADDR.OFFICE\n          INTO ADDRESS\n          FROM DUAL;\n\n      END IF;\n\n      RETURN ADDRESS;\n\n    END GETCUSADDR;\n\n  -- йпюяхбши бшбнд оюяонпрмшу дюммшу\n  FUNCTION GETCUSDOC(CUSNUM  IN VCUS.ICUSNUM %TYPE,                   -- мнлеп йкхемрю\n                     DOCTYPE IN CUS_DOCUM.ID_DOC_TP%TYPE DEFAULT 0, -- рхо днйслемрю\n                     VTYPE   IN NUMBER                     DEFAULT 0                      -- тнплюр бшбндю\n  )\n    RETURN VARCHAR\n    IS\n      OUTLINE VARCHAR2(1024);\n    BEGIN\n      SELECT DECODE(VTYPE, 0, CPUDDOC || \u0027 \u0027) ||\n      DOC_SER || \u0027 \u0027 || DOC_NUM ||\n      \u0027 бшдюм \u0027 || TO_CHAR(DOC_DATE, \u0027DD.MM.RRRR\u0027) || \u0027 ц.\u0027 ||\n      DECODE(DOC_AGENCY, NULL, NULL, \u0027 \u0027 || DOC_AGENCY) ||\n      DECODE(DOC_SUBDIV, NULL, NULL, DECODE(VTYPE, 0, \u0027, йнд ондпюгдекемхъ: \u0027 || DOC_SUBDIV))\n        INTO OUTLINE\n        FROM CUS_DOCUM,\n             PUD\n        WHERE IPUDID \u003d ID_DOC_TP\n          AND (ID_DOC_TP \u003d DOCTYPE\n          OR (DOCTYPE \u003d 0\n          AND PREF \u003d \u0027Y\u0027))\n          AND ICUSNUM \u003d CUSNUM;\n      RETURN OUTLINE;\n    END GETCUSDOC;\n  -- онксвхрэ тюлхкхч х.н. он тхн\n  FUNCTION GETFIO_SH(FIO IN VARCHAR2)\n    RETURN VARCHAR2\n    IS\n      OUTLINE VARCHAR2(200);\n      FNPOS   NUMBER;\n      MNPOS   NUMBER;\n    BEGIN\n\n      SELECT INSTR(FIO, \u0027 \u0027) + 1\n        INTO FNPOS\n        FROM DUAL;\n      SELECT INSTR(FIO, \u0027 \u0027, FNPOS) + 1\n        INTO MNPOS\n        FROM DUAL;\n      SELECT SUBSTR(FIO, 1, FNPOS) || \u0027. \u0027 || SUBSTR(FIO, MNPOS, 1) || \u0027.\u0027\n        INTO OUTLINE\n        FROM DUAL;\n\n      RETURN OUTLINE;\n    END GETFIO_SH;\n\n  -- дкъ бшбндю пюявермнцн пегепбю он окюрхме\n\n  FUNCTION GET_CALC_RESERVE(AGRID   IN NUMBER,\n                            DEFDATE IN DATE)\n    RETURN NUMBER\n    IS\n      EM   NUMBER;\n      RES  NUMBER;\n      RESO NUMBER;\n      ERMS VARCHAR2(300);\n    BEGIN\n      EM :\u003d CDRESERVE.RECALC_RESERVE(ERMS, AGRID, DEFDATE, RES, RESO, FALSE);\n      IF EM \u003d 1\n      THEN\n        RETURN ROUND((RES + RESO), 2);\n      ELSE\n        RETURN EM;\n      END IF;\n    EXCEPTION\n      WHEN OTHERS THEN RETURN 0;\n    END GET_CALC_RESERVE;\n\n  -- дкъ мнплюкэмнцн бшбндю рекетнммнцн мнлепю\n\n  FUNCTION GETCUSPHONE(CUSNUM IN NUMBER,\n                       PHTYPE IN NUMBER DEFAULT 0,\n                       PRINT IN NUMBER DEFAULT 0)\n    RETURN VARCHAR2\n    IS\n      PHONE VARCHAR2(50);\n      CNT   NUMBER;\n      CITY  NUMBER;\n      NM    NUMBER;\n    BEGIN\n      BEGIN\n        SELECT PH_CNT,\n               PH_CITY,\n               PH_NUMNUM\n          INTO CNT,\n               CITY,\n               NM\n          FROM CUS_PHONE\n          WHERE ICUSNUM \u003d CUSNUM\n            AND PH_TYPE \u003d PHTYPE\n            AND ROWNUM \u003d 1;\n      EXCEPTION\n        WHEN NO_DATA_FOUND THEN SELECT PH_CNT,\n                                       PH_CITY,\n                                       PH_NUMNUM\n              INTO CNT,\n                   CITY,\n                   NM\n              FROM CUS_PHONE\n              WHERE ICUSNUM \u003d CUSNUM\n                AND ROWNUM \u003d 1;\n      END;\n      --PHONE :\u003d \u0027+\u0027||CNT||\u0027(\u0027||CITY||\u0027)\u0027||NM;\n      IF CNT IS NULL\n      THEN\n        IF CITY IS NULL OR CITY \u003d \u0027\u0027\n        THEN\n          PHONE :\u003d NM;\n        ELSE\n          PHONE :\u003d \u0027(\u0027 || CITY || \u0027)\u0027 || NM;\n        END IF;\n      ELSIF PRINT \u003d 1 THEN\n        PHONE :\u003d \u0027+\u0027 || CNT || \u0027(\u0027 || CITY || \u0027)\u0027 || NM;\n      ELSE\n        PHONE :\u003d \u0027+\u0027 || CNT || CITY || NM;\n      END IF;\n      RETURN PHONE;\n    EXCEPTION\n      WHEN OTHERS THEN RETURN \u0027нрясрярбсер\u0027;\n\n    END GETCUSPHONE;\n\n  FUNCTION GET_AC(CDEFINT IN VARCHAR2,\n                  CID_1   IN VARCHAR2 DEFAULT NULL,\n                  CID_2   IN VARCHAR2 DEFAULT NULL)\n    RETURN VARCHAR2\n    IS\n      PRAGMA AUTONOMOUS_TRANSACTION;\n      RES VARCHAR2(2000);\n    BEGIN\n      RES :\u003d AC.GET_VALUE(CDEFINT \u003d\u003e CDEFINT,\n      CID_1 \u003d\u003e CID_1,\n      CID_2 \u003d\u003e CID_2);\n      RETURN RES;\n    EXCEPTION\n      WHEN OTHERS THEN RETURN SQLERRM;\n    END GET_AC;\n\n  /*гюонкмемхе рюакхжш ABL дкъ пюяверю йндю 1414*/\n\n  FUNCTION FILL_1414(DATEFROM IN DATE,\n                     DATETO   IN DATE)\n    RETURN NUMBER\n    IS\n      PRAGMA AUTONOMOUS_TRANSACTION;\n    BEGIN\n      DELETE FROM RCA\n        WHERE CRCASESSION \u003d USERENV(\u0027SESSIONID\u0027);\n      --DELETE FROM LOAD_OSV_ERRORS;\n      INSERT INTO RCA (\n        CRCAACC, CRCACUR\n      )\n        SELECT CACCACC,\n               CACCCUR\n          FROM ACC\n          WHERE IACCBS2 IN (40704, 40603, 40501, 40502, 40503, 40601,\n            40602, 40701, 40702, 40703, 40504, 40705,\n            40505, 40802, 40807);\n      LEDGER_N.FILL_ABL(0, DATEFROM, DATETO, DATEFROM, DATETO, 0, 1, 1, 1, NULL, 1);\n      COMMIT;\n      RETURN 1;\n    EXCEPTION\n      WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE(SQLERRM);\n          RETURN 0;\n    END FILL_1414;\n\n\nEND INVSPB_AP;\n/"
+    }
+  }
+}
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument/publishDiagnostics",
+  "params": {
+    "uri": "file:///c%3A/Source/invspb_ap/invspb-invspb_ap-48bef2396ee4/INVSPB_AP.sql",
+    "diagnostics": [
+      {
+        "range": {
+          "start": {
+            "line": 111,
+            "character": 23
+          },
+          "end": {
+            "line": 111,
+            "character": 24
+          }
+        },
+        "severity": 1,
+        "source": "PLSQL",
+        "message": "mismatched input \u0027%\u0027 expecting {\u0027DEFAULT\u0027, \u0027NOT\u0027, \u0027:\u003d\u0027, \u0027;\u0027}"
+      },
+      {
+        "range": {
+          "start": {
+            "line": 0,
+            "character": 0
+          },
+          "end": {
+            "line": 0,
+            "character": 2
+          }
+        },
+        "severity": 1,
+        "source": "PLSQL",
+        "message": "Test issue "
+      }
+    ]
+  }
+}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getTree",
+  "params": "biss_dev2/biss@biss"
+}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "[\u0027T_TEST_1\u0027,\u0027TEMP\u0027,\u0027MONEY\u0027]"
+}
