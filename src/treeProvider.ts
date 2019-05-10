@@ -8,8 +8,16 @@ export enum NodeKind {
 }
 
 export enum ObjectType {
-   TABLE,
-   VIEW
+   TABLE = 'TABLE',
+   VIEW = 'VIEW',
+   PACKAGE = 'PACKAGE',
+   PACKAGE_BODY = 'PACKAGE_BODY',
+   FUNCTION = 'FUNCTION',
+   PROCEDURE = 'PROCEDURE',
+   INDEX = 'INDEX',
+   TRIGGER = 'TRIGGER',
+   SEQUENCE = 'SEQUENCE',
+   SYNONYM = 'SYNONYM'
 }
 
 export class DBNode {
@@ -26,16 +34,29 @@ export class DBNode {
 
    public getChildren(langClient: vscode_languageclient.LanguageClient): DBNode[] | Thenable<DBNode[]> {
       if (this.kind === NodeKind.CONNECTION) {
-         return [new DBNode('Tables', NodeKind.OBJECT_TYPE, this.connection, ObjectType.TABLE)];
+         // Object.values(MyEnum) - enum to array
+         return [
+            new DBNode('Tables', NodeKind.OBJECT_TYPE, this.connection, ObjectType.TABLE),
+            new DBNode('Views', NodeKind.OBJECT_TYPE, this.connection, ObjectType.VIEW),
+            new DBNode('Packages', NodeKind.OBJECT_TYPE, this.connection, ObjectType.PACKAGE),
+            new DBNode('Functions', NodeKind.OBJECT_TYPE, this.connection, ObjectType.FUNCTION),
+            new DBNode('Procedures', NodeKind.OBJECT_TYPE, this.connection, ObjectType.PROCEDURE),
+            new DBNode('Indexes', NodeKind.OBJECT_TYPE, this.connection, ObjectType.INDEX),
+            new DBNode('Triggers', NodeKind.OBJECT_TYPE, this.connection, ObjectType.TRIGGER),
+            new DBNode('Sequences', NodeKind.OBJECT_TYPE, this.connection, ObjectType.SEQUENCE),
+            new DBNode('Synonyms', NodeKind.OBJECT_TYPE, this.connection, ObjectType.SYNONYM)
+         ];
       } else if (this.kind === NodeKind.OBJECT_TYPE) {
-         return langClient.sendRequest<string>('getTree', 'biss_dev2/biss@biss').then((e: string) => {
-                  console.log("responce: " + e);
+         const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', object_type: this.object_type};
+         return langClient.sendRequest<string>('getTree', JSON.stringify(params)).then((e: string) => {
+                  // console.log("responce: " + e);
                   let objects: DBNode[] = [];
                   let labels: string[];
                   labels = eval(e);
                   const connection = this.connection;
+                  const object_type = this.object_type;
                   labels.forEach(function (objectName) {
-                     objects.push(new DBNode(objectName, NodeKind.OBJECT, connection, ObjectType.TABLE))
+                     objects.push(new DBNode(objectName, NodeKind.OBJECT, connection, object_type))
                   });
                   return objects;
                });
