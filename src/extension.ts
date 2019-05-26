@@ -18,6 +18,8 @@ const LANGUAGE_CLIENT_JAVA_VSCODE_SETTING_NULL = 'plsql-lsp.javaHome VSCode sett
 const LANGUAGE_CLIENT_JAVA_START_PATH = 'Starting language server with java path: ';
 
 let langClient: vscode_languageclient.LanguageClient;
+let activeConnection: string;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -72,7 +74,8 @@ export function activate(context: vscode.ExtensionContext) {
      provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
         // simply invoke cowsay, use uri-path as text
         let path : String[] = uri.path.split("/");
-        const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', name: path[1], type: path[0]};
+
+        const params = {connection: activeConnection, name: path[1], type: path[0]};
         return langClient.sendRequest<string>("getDDL", JSON.stringify(params)).then((e) => {
          return JSON.parse(e).ddl;
        });;
@@ -85,6 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
    // console.log(node.object_type);
 
         let uri = vscode.Uri.parse('oraddl:' + node.object_type + "/" + node.label);
+        activeConnection = node.connection;
         let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
 
         await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });

@@ -110,7 +110,19 @@
                "group": "inline"
             }
          ]
-      }
+      },
+      "configuration": [
+         {
+            "title": "Oracle configuration",
+            "properties": {
+               "plsql-lsp.connectionStrings": {
+                  "type": "array",
+                  "required": false,
+                  "description": "connection string like user/password@host:port/sid"
+              }
+            }
+         }
+      ]
    },
    "scripts": {
       "vscode:prepublish": "npm run compile",

@@ -52,7 +52,7 @@ export class DBNode extends vscode.TreeItem {
             new DBNode('Synonyms', NodeKind.OBJECT_TYPE, this.connection, ObjectType.SYNONYM)
          ];
       } else if (this.kind === NodeKind.OBJECT_TYPE) {
-         const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', object_type: this.object_type};
+         const params = {connection: this.connection, object_type: this.object_type};
          return langClient.sendRequest<string>('getTree', JSON.stringify(params)).then((e: string) => {
                   // console.log("responce: " + e);
                   let objects: DBNode[] = [];
@@ -78,7 +78,13 @@ export class DBTreeDataProvider implements vscode.TreeDataProvider<DBNode> {
    }
 
    private getConnections(): DBNode[] {
-      return [new DBNode('biss_dev2@biss', NodeKind.CONNECTION, 'biss_dev2@biss', undefined)];
+      const conf = vscode.workspace.getConfiguration('plsql-lsp');//.get('connections.connectionString');
+      const conn = <string[]>conf.get('connectionStrings');
+      let connNodes: DBNode[] = [];
+      conn.forEach((element) => {
+         connNodes.push(new DBNode(element.replace(new RegExp("/.*@"), "@"), NodeKind.CONNECTION, element, undefined));
+      })
+      return connNodes;
       // return [{connection: 'biss_dev2@biss', kind: NodeKind.CONNECTION, label: 'biss_dev2@biss', object_type: undefined}];
    }
 
