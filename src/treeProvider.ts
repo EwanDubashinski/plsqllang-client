@@ -2,16 +2,16 @@ import * as vscode from 'vscode';
 import * as vscode_languageclient from 'vscode-languageclient';
 
 export enum NodeKind {
-   CONNECTION,
-   OBJECT_TYPE,
-   OBJECT
+   CONNECTION = 'CONNECTION',
+   OBJECT_TYPE = 'OBJECT_TYPE',
+   OBJECT = 'OBJECT'
 }
 
 export enum ObjectType {
    TABLE = 'TABLE',
    VIEW = 'VIEW',
    PACKAGE = 'PACKAGE',
-   PACKAGE_BODY = 'PACKAGE_BODY',
+   PACKAGE_BODY = 'PACKAGE BODY',
    FUNCTION = 'FUNCTION',
    PROCEDURE = 'PROCEDURE',
    INDEX = 'INDEX',
@@ -20,17 +20,22 @@ export enum ObjectType {
    SYNONYM = 'SYNONYM'
 }
 
-export class DBNode {
+export class DBNode extends vscode.TreeItem {
    constructor (label: string, kind: NodeKind, connection: string, object_type: ObjectType | undefined) {
+      super(label, kind === NodeKind.OBJECT ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed);
       this.label = label;
       this.kind = kind;
       this.connection = connection;
       this.object_type = object_type;
+      // this.tooltip = this.kind;
+      this.contextValue = this.kind;
    }
    public label: string;
    public kind: NodeKind;
    public connection: string;
    public object_type: ObjectType | undefined;
+
+
 
    public getChildren(langClient: vscode_languageclient.LanguageClient): DBNode[] | Thenable<DBNode[]> {
       if (this.kind === NodeKind.CONNECTION) {
@@ -69,10 +74,7 @@ export class DBTreeDataProvider implements vscode.TreeDataProvider<DBNode> {
    }
 
    public getTreeItem(element: DBNode): vscode.TreeItem {
-		return {
-         label: element.label,
-         collapsibleState: element.kind === NodeKind.OBJECT ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed
-		};
+		return element;
    }
 
    private getConnections(): DBNode[] {

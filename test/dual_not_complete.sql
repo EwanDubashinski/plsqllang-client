@@ -1,1 +1,16 @@
-SELECT NULL, T.TTT FROM DUAL, TEST T WHERE 1=2;
+DECLARE
+BEGIN
+   IF DDD THEN
+      NULL;
+      IF X THEN
+         NULL;
+      END IF;
+   END IF;
+
+   LOOP
+      KSKEHF;
+   END LOOP;
+   IF X THEN
+      X;
+   END IF;
+END;

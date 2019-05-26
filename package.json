@@ -1,91 +1,132 @@
 {
-	"name": "plsql-lsp",
-	"displayName": "plsql-lsp",
-	"description": "PLSQL language server",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.29.0"
-	},
-	"categories": [
-		"Programming Languages"
-	],
+   "name": "plsql-lsp",
+   "displayName": "plsql-lsp",
+   "description": "PLSQL language server",
+   "version": "0.0.1",
+   "engines": {
+      "vscode": "^1.29.0"
+   },
+   "categories": [
+      "Programming Languages"
+   ],
    "activationEvents": [
       "onLanguage:plsql"
    ],
-	"main": "./out/extension.js",
-	"contributes": {
+   "main": "./out/extension.js",
+   "contributes": {
       "viewsContainers": {
          "activitybar": [
-           {
-             "id": "oracledb-explorer",
-             "title": "Oracle DB Explorer",
-             "icon": "media/oracle.svg"
-           }
+            {
+               "id": "oracledb-explorer",
+               "title": "Oracle DB Explorer",
+               "icon": "media/oracle.svg"
+            }
          ]
-       },
-       "views": {
+      },
+      "views": {
          "oracledb-explorer": [
-           {
-             "id": "dbObjects",
-             "name": "Database Objects"
-           }
+            {
+               "id": "dbObjects",
+               "name": "Database Objects"
+            }
          ]
-       },
+      },
       "languages": [
-          {
-              "id": "plsql",
-              "aliases": [
-                  "PLSQL",
-                  "PL/SQL",
-                  "plsql"
-              ],
-              "extensions": [
-                  ".sql",
-                  ".ddl",
-                  ".dml",
-                  ".pkh",
-                  ".pks",
-                  ".pkb",
-                  ".pck",
-                  ".pls",
-                  ".plb",
-
-                  ".bdy",
-                  ".fnc",
-                  ".idx",
-                  ".mv",
-                  ".prc",
-                  ".prg",
-                  ".sch",
-                  ".seq",
-                  ".spc",
-                  ".syn",
-                  ".tab",
-                  ".tbl",
-                  ".tbp",
-                  ".tps",
-                  ".trg",
-                  ".typ",
-                  ".vw"
-              ]
-          }
-      ]
+         {
+            "id": "plsql",
+            "aliases": [
+               "PLSQL",
+               "PL/SQL",
+               "plsql"
+            ],
+            "extensions": [
+               ".sql",
+               ".ddl",
+               ".dml",
+               ".pkh",
+               ".pks",
+               ".pkb",
+               ".pck",
+               ".pls",
+               ".plb",
+               ".bdy",
+               ".fnc",
+               ".idx",
+               ".mv",
+               ".prc",
+               ".prg",
+               ".sch",
+               ".seq",
+               ".spc",
+               ".syn",
+               ".tab",
+               ".tbl",
+               ".tbp",
+               ".tps",
+               ".trg",
+               ".typ",
+               ".vw"
+            ],
+            "configuration": "./lang-conf/plsql.configuration.json"
+         }
+      ],
+      "grammars": [
+         {
+            "language": "plsql",
+            "scopeName": "source.plsql.oracle",
+            "path": "./lang-conf/plsql.tmLanguage"
+         }
+      ],
+      "snippets": [
+         {
+            "language": "plsql",
+            "path": "./lang-conf/snippets.json"
+         }
+      ],
+      "commands": [
+         {
+            "command": "plsql-lsp.exec",
+            "title": "PLSQL - run current command"
+         },
+         {
+            "command": "oraddl.test",
+            "title": "Oracle: get DDL",
+            "icon": {
+               "light": "resources/light/document.svg",
+               "dark": "resources/dark/document.svg"
+            }
+         }
+      ],
+      "keybindings": {
+         "command": "plsql-lsp.exec",
+         "when": "resourceLangId == plsql && editorTextFocus",
+         "key": "ctrl+enter"
+      },
+      "menus": {
+         "view/item/context": [
+            {
+               "command": "oraddl.test",
+               "when": "view == dbObjects && viewItem == OBJECT",
+               "group": "inline"
+            }
+         ]
+      }
    },
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
-	},
-	"dependencies": {
-		"vscode-languageclient": "^3.3.0"
-	},
-	"devDependencies": {
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28",
-		"tslint": "^5.12.1",
-		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
-	}
+   "scripts": {
+      "vscode:prepublish": "npm run compile",
+      "compile": "tsc -p ./",
+      "watch": "tsc -watch -p ./",
+      "postinstall": "node ./node_modules/vscode/bin/install",
+      "test": "npm run compile && node ./node_modules/vscode/bin/test"
+   },
+   "dependencies": {
+      "vscode-languageclient": "^3.3.0"
+   },
+   "devDependencies": {
+      "typescript": "^3.3.1",
+      "vscode": "^1.1.28",
+      "tslint": "^5.12.1",
+      "@types/node": "^10.12.21",
+      "@types/mocha": "^2.2.42"
+   }
 }

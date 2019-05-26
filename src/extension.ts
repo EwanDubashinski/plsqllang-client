@@ -16,6 +16,8 @@ const LANGUAGE_CLIENT_JAVA_WARNING = 'Failure to initialize language server: the
 const LANGUAGE_CLIENT_JAVA_INVALID_VERSION = 'Invalid JDK version';
 const LANGUAGE_CLIENT_JAVA_VSCODE_SETTING_NULL = 'plsql-lsp.javaHome VSCode setting is not set';
 const LANGUAGE_CLIENT_JAVA_START_PATH = 'Starting language server with java path: ';
+
+let langClient: vscode_languageclient.LanguageClient;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -47,21 +49,112 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showWarningMessage(LANGUAGE_CLIENT_JAVA_WARNING);
     });
   });
-  // // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // // This line of code will only be executed once when your extension is activated
-  // console.log('Congratulations, your extension "plsql-lsp" is now active!');
+  context.subscriptions.push(
+    vscode.commands.registerCommand('plsql-lsp.exec', () => {
+      // Create and show a new webview
+      const panel = vscode.window.createWebviewPanel(
+        'query-results', // Identifies the type of the webview. Used internally
+        'Query results', // Title of the panel displayed to the user
+        vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+        {enableScripts: true} // Webview options. More on these later.
+      );
+      panel.webview.html = "Loading...";
+      getQueryResults(panel);
+    })
+  );
+  const myScheme = 'oraddl';
+  const myProvider = new class implements vscode.TextDocumentContentProvider {
 
-  // // The command has been defined in the package.json file
-  // // Now provide the implementation of the command with registerCommand
-  // // The commandId parameter must match the command field in package.json
-  // let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-  // 	// The code you place here will be executed every time your command is executed
+     // emitter and its event
+     onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
+     onDidChange = this.onDidChangeEmitter.event;
 
-  // 	// Display a message box to the user
-  // 	vscode.window.showInformationMessage('Hello World!');
-  // });
+     provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
+        // simply invoke cowsay, use uri-path as text
+        let path : String[] = uri.path.split("/");
+        const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', name: path[1], type: path[0]};
+        return langClient.sendRequest<string>("getDDL", JSON.stringify(params)).then((e) => {
+         return JSON.parse(e).ddl;
+       });;
+     }
+  }
+  context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
 
-  // context.subscriptions.push(disposable);
+  // register a command that opens a cowsay-document
+  context.subscriptions.push(vscode.commands.registerCommand('oraddl.test', async (node: treeProvider.DBNode) => {
+   // console.log(node.object_type);
+
+        let uri = vscode.Uri.parse('oraddl:' + node.object_type + "/" + node.label);
+        let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
+
+        await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });
+        await vscode.languages.setTextDocumentLanguage(doc, "plsql");
+
+  }));
+}
+
+function getWebviewContent(results: string) {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Query results</title>
+        <style>
+        .container {
+           display: table;
+           border-collapse: collapse;
+          }
+
+          .grid-row {
+            display: table-row;
+          }
+
+          .grid-cell {
+            display: table-cell;
+            padding: 3px;
+            border: 1px solid var(--vscode-dropdown-border);
+        }
+     </style>
+    </head>
+      <body>
+        <script>
+          let array = eval('` + results + `')
+          let container = document.createElement('div');
+          container.setAttribute('class', 'container');
+          document.body.appendChild(container);
+          array.forEach(rowValue => {
+            let row = document.createElement('div');
+            row.setAttribute('class', 'grid-row');
+            container.appendChild(row);
+            rowValue.forEach(cellValue => {
+                let cell = document.createElement('div');
+                cell.setAttribute('class', 'grid-cell');
+                cell.textContent = cellValue;
+                row.appendChild(cell);
+            });
+          });
+        </script>
+      </body>
+    </html>`;
+}
+
+function getQueryResults(panel: vscode.WebviewPanel) {
+  let query: string = "";
+
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    query = editor.document.getText(editor.selection)
+    if (!query) query = editor.document.getText();
+  }
+  if (query) {
+    const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', query: query};
+
+    langClient.sendRequest<string>("getQueryResults", JSON.stringify(params)).then((e) => {
+      panel.webview.html = getWebviewContent(e);
+    });
+  }
 }
 
 function initLangClient(serverJarPath: string, javaPath: string) {
@@ -89,7 +182,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
     options: { stdio: 'pipe' }
   };
 
-  let langClient = new vscode_languageclient.LanguageClient(LANGUAGE_CLIENT_ID, LANGUAGE_CLIENT_NAME, serverOptions, clientOptions, true);
+  langClient = new vscode_languageclient.LanguageClient(LANGUAGE_CLIENT_ID, LANGUAGE_CLIENT_NAME, serverOptions, clientOptions, true);
 
   // langClient.on
 
@@ -105,6 +198,13 @@ function initLangClient(serverJarPath: string, javaPath: string) {
   toggleItem(vscode.window.activeTextEditor, item);
 
   langClient.onReady().then(() => {
+    // langClient.onNotification("traceMsg", function(e) {
+    //   console.log(e);
+    // })
+    langClient.onTelemetry((e) => {
+      console.log(e);
+    })
+
     console.log(LANGUAGE_CLIENT_READY_MSG);
 
     item.text = LANGUAGE_CLIENT_READY_MSG;
@@ -134,7 +234,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
 
 function toggleItem(editor: vscode.TextEditor | undefined, item: vscode.StatusBarItem) {
   if (editor && editor.document &&
-    (editor.document.languageId === 'sql' || editor.document.languageId === 'plsql')) {
+    (editor.document.languageId === 'plsql')) {
     item.show();
   } else {
     item.hide();

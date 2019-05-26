@@ -1,0 +1,142 @@
+{
+   "while": {
+      "prefix": "wl",
+      "body": [
+        "WHILE $1",
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "END LOOP;"
+      ],
+      "description": "while-loop statement"
+  },
+   "loop": {
+      "prefix": "lp",
+      "body": [
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "END LOOP;"
+      ],
+      "description": "loop statement"
+  },
+   "loop-exit": {
+      "prefix": "lpe",
+      "body": [
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "\tEXIT WHEN $1;",
+        "END LOOP;"
+      ],
+      "description": "loop-exit statement"
+  },
+   "For_Loop": {
+      "prefix": "fori",
+      "body": [
+        "FOR ${1:i} IN ${2:1}..$3",
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "END LOOP;"
+      ],
+      "description": "For loop (counter)"
+  },
+   "For_cursor": {
+      "prefix": "forc",
+      "body": [
+        "FOR ${1:r} IN ${2:cursor}",
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "END LOOP;"
+      ],
+      "description": "For loop (cursor)"
+  },
+   "For_select": {
+      "prefix": "fors",
+      "body": [
+        "FOR ${1:r} IN (SELECT ${2:*} FROM ${3:dual})",
+        "LOOP",
+        "\t$TM_SELECTED_TEXT$0",
+        "END LOOP;"
+      ],
+      "description": "For loop (select)"
+  },
+   "if": {
+      "prefix": "if",
+      "body": [
+        "IF $1",
+        "THEN",
+        "\t$TM_SELECTED_TEXT$0",
+        "END IF;"
+      ],
+      "description": "If statement"
+  },
+   "if_else": {
+      "prefix": "ie",
+      "body": [
+        "IF $1",
+        "THEN",
+        "\t$TM_SELECTED_TEXT$0",
+        "ELSE",
+        "\t$2",
+        "END IF;"
+      ],
+      "description": "If-else statement"
+  },
+   "begin": {
+      "prefix": "beg",
+      "body": [
+        "BEGIN",
+        "\t$TM_SELECTED_TEXT$0",
+        "END;"
+      ],
+      "description": "begin-end"
+  },
+   "begin-ex": {
+      "prefix": "bege",
+      "body": [
+        "BEGIN",
+        "\t$TM_SELECTED_TEXT$0",
+        "EXCEPTION",
+        "\tWHEN ${1|OTHERS,NO_DATA_FOUND,TOO_MANY_ROWS,VALUE_ERROR,DUP_VAL_ON_INDEX,INVALID_CURSOR,CURSOR_ALREADY_OPEN,INVALID_NUMBER,ZERO_DIVIDE,TIMEOUT_ON_RESOURCE,STORAGE_ERROR,PROGRAM_ERROR,TRANSACTION_BACKED_OUT,NOT_LOGGED_ON,LOGIN_DENIED|}",
+        "\tTHEN",
+        "\t\t${2:NULL};",
+        "END;"
+      ],
+      "description": "begin-exception-end"
+  },
+   "declare-begin": {
+      "prefix": "db",
+      "body": [
+        "DECLARE",
+        "\t$1",
+        "BEGIN",
+        "\t$TM_SELECTED_TEXT$0",
+        "END;"
+      ],
+      "description": "declare-begin-end"
+  },
+   "declare-begin-ex": {
+      "prefix": "dbe",
+      "body": [
+        "DECLARE",
+        "\t$2",
+        "BEGIN",
+        "\t$TM_SELECTED_TEXT$0",
+        "EXCEPTION",
+        "\tWHEN ${1|OTHERS,NO_DATA_FOUND,TOO_MANY_ROWS,VALUE_ERROR,DUP_VAL_ON_INDEX,INVALID_CURSOR,CURSOR_ALREADY_OPEN,INVALID_NUMBER,ZERO_DIVIDE,TIMEOUT_ON_RESOURCE,STORAGE_ERROR,PROGRAM_ERROR,TRANSACTION_BACKED_OUT,NOT_LOGGED_ON,LOGIN_DENIED|}",
+        "\tTHEN",
+        "\t\t${2:NULL};",
+        "END;"
+      ],
+      "description": "declare-begin-exception-end"
+  },
+   "exception": {
+      "prefix": "ex",
+      "body": [
+        "EXCEPTION",
+        "\tWHEN ${1|OTHERS,NO_DATA_FOUND,TOO_MANY_ROWS,VALUE_ERROR,DUP_VAL_ON_INDEX,INVALID_CURSOR,CURSOR_ALREADY_OPEN,INVALID_NUMBER,ZERO_DIVIDE,TIMEOUT_ON_RESOURCE,STORAGE_ERROR,PROGRAM_ERROR,TRANSACTION_BACKED_OUT,NOT_LOGGED_ON,LOGIN_DENIED|}",
+        "\tTHEN",
+        "\t\t$TM_SELECTED_TEXT$0",
+        "END;"
+      ],
+      "description": "exception statement"
+  }
+}
