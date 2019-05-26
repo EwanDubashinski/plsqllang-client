@@ -29,13 +29,17 @@ export class DBNode extends vscode.TreeItem {
       this.object_type = object_type;
       // this.tooltip = this.kind;
       this.contextValue = this.kind;
+      this.command = { command: 'plsql-lsp.activateConnection', title: "plsql-lsp.activateConnection", arguments: [this], };
    }
    public label: string;
    public kind: NodeKind;
    public connection: string;
    public object_type: ObjectType | undefined;
+   public active: boolean = false;
 
-
+   get description(): string {
+		return this.active ? "Active" : "";
+	}
 
    public getChildren(langClient: vscode_languageclient.LanguageClient): DBNode[] | Thenable<DBNode[]> {
       if (this.kind === NodeKind.CONNECTION) {
@@ -70,8 +74,16 @@ export class DBNode extends vscode.TreeItem {
 }
 
 export class DBTreeDataProvider implements vscode.TreeDataProvider<DBNode> {
+
+   private _onDidChangeTreeData: vscode.EventEmitter<DBNode | undefined> = new vscode.EventEmitter<DBNode | undefined>();
+	readonly onDidChangeTreeData: vscode.Event<DBNode | undefined> = this._onDidChangeTreeData.event;
+
    constructor (readonly langClient: vscode_languageclient.LanguageClient) {
    }
+
+   public refresh(node: DBNode): void {
+		this._onDidChangeTreeData.fire(node);
+	}
 
    public getTreeItem(element: DBNode): vscode.TreeItem {
 		return element;
@@ -87,6 +99,7 @@ export class DBTreeDataProvider implements vscode.TreeDataProvider<DBNode> {
       return connNodes;
       // return [{connection: 'biss_dev2@biss', kind: NodeKind.CONNECTION, label: 'biss_dev2@biss', object_type: undefined}];
    }
+
 
 
 

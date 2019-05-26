@@ -89,6 +89,10 @@
             "title": "PLSQL - run current command"
          },
          {
+            "command": "plsql-lsp.activateConnection",
+            "title": "Activate connection"
+         },
+         {
             "command": "oraddl.test",
             "title": "Oracle: get DDL",
             "icon": {
@@ -119,7 +123,7 @@
                   "type": "array",
                   "required": false,
                   "description": "connection string like user/password@host:port/sid"
-              }
+               }
             }
          }
       ]
@@ -135,10 +139,10 @@
       "vscode-languageclient": "^3.3.0"
    },
    "devDependencies": {
-      "typescript": "^3.3.1",
-      "vscode": "^1.1.28",
+      "@types/mocha": "^2.2.42",
+      "@types/node": "^10.14.7",
       "tslint": "^5.12.1",
-      "@types/node": "^10.12.21",
-      "@types/mocha": "^2.2.42"
+      "typescript": "^3.3.1",
+      "vscode": "^1.1.34"
    }
 }

@@ -19,6 +19,7 @@ const LANGUAGE_CLIENT_JAVA_START_PATH = 'Starting language server with java path
 
 let langClient: vscode_languageclient.LanguageClient;
 let activeConnection: string;
+let treeDataProvider: DBTreeDataProvider;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -51,6 +52,9 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showWarningMessage(LANGUAGE_CLIENT_JAVA_WARNING);
     });
   });
+
+
+
   context.subscriptions.push(
     vscode.commands.registerCommand('plsql-lsp.exec', () => {
       // Create and show a new webview
@@ -58,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
         'query-results', // Identifies the type of the webview. Used internally
         'Query results', // Title of the panel displayed to the user
         vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
-        {enableScripts: true} // Webview options. More on these later.
+        { enableScripts: true } // Webview options. More on these later.
       );
       panel.webview.html = "Loading...";
       getQueryResults(panel);
@@ -67,32 +71,43 @@ export function activate(context: vscode.ExtensionContext) {
   const myScheme = 'oraddl';
   const myProvider = new class implements vscode.TextDocumentContentProvider {
 
-     // emitter and its event
-     onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
-     onDidChange = this.onDidChangeEmitter.event;
+    // emitter and its event
+    onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
+    onDidChange = this.onDidChangeEmitter.event;
 
-     provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
-        // simply invoke cowsay, use uri-path as text
-        let path : String[] = uri.path.split("/");
-
-        const params = {connection: activeConnection, name: path[1], type: path[0]};
-        return langClient.sendRequest<string>("getDDL", JSON.stringify(params)).then((e) => {
-         return JSON.parse(e).ddl;
-       });;
-     }
+    provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
+      // simply invoke cowsay, use uri-path as text
+      let path: string[] = uri.path.split("/");
+      const conn = path[0].replace('+', "/").replace('+', "/");
+      const params = { connection: conn, name: path[2], type: path[1] };
+      return langClient.sendRequest<string>("getDDL", JSON.stringify(params)).then((e) => {
+        return JSON.parse(e).ddl;
+      });;
+    }
   }
   context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
 
-  // register a command that opens a cowsay-document
+  context.subscriptions.push(vscode.commands.registerCommand('plsql-lsp.activateConnection', async (node: treeProvider.DBNode) => {
+    if (node.kind === treeProvider.NodeKind.CONNECTION) {
+      if (!node.active) {
+        node.active = true;
+      } else {
+        node.active = false;
+      }
+      activeConnection = node.connection;
+      treeDataProvider.refresh(node);
+    }
+  }));
+
   context.subscriptions.push(vscode.commands.registerCommand('oraddl.test', async (node: treeProvider.DBNode) => {
-   // console.log(node.object_type);
+    // console.log(node.object_type);
 
-        let uri = vscode.Uri.parse('oraddl:' + node.object_type + "/" + node.label);
-        activeConnection = node.connection;
-        let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
+    let uri = vscode.Uri.parse('oraddl:' + node.connection.replace(new RegExp('/', 'g'), "+") + "/" + node.object_type + "/" + node.label);
+    //   activeConnection = node.connection;
+    let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
 
-        await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });
-        await vscode.languages.setTextDocumentLanguage(doc, "plsql");
+    await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });
+    await vscode.languages.setTextDocumentLanguage(doc, "plsql");
 
   }));
 }
@@ -153,7 +168,7 @@ function getQueryResults(panel: vscode.WebviewPanel) {
     if (!query) query = editor.document.getText();
   }
   if (query) {
-    const params = {connection: 'biss_dev2/biss@milesplus2:1521/biss', query: query};
+    const params = { connection: activeConnection, query: query };
 
     langClient.sendRequest<string>("getQueryResults", JSON.stringify(params)).then((e) => {
       panel.webview.html = getWebviewContent(e);
@@ -209,6 +224,12 @@ function initLangClient(serverJarPath: string, javaPath: string) {
       console.log(e);
     })
 
+    console.log("before DBTreeDataProvider");
+
+    treeDataProvider = new DBTreeDataProvider(langClient);
+    vscode.window.createTreeView('dbObjects', { treeDataProvider });
+    console.log("after createTreeView");
+
     console.log(LANGUAGE_CLIENT_READY_MSG);
 
     item.text = LANGUAGE_CLIENT_READY_MSG;
@@ -221,11 +242,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
     // langClient.sendRequest('getTree', 'biss_dev2/biss@biss').then((e) => {
     //    console.log(e);
     // });
-    console.log("before DBTreeDataProvider");
 
-    let treeDataProvider = new DBTreeDataProvider(langClient);
-    vscode.window.createTreeView('dbObjects', { treeDataProvider });
-    console.log("after createTreeView");
     // context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider('ftp', treeDataProvider));
 
   });
