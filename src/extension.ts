@@ -139,7 +139,7 @@ function getWebviewContent(results: string) {
     </head>
       <body>
         <script>
-          let array = eval('` + results + `')
+          let array = ` + results + `;
           let container = document.createElement('div');
           container.setAttribute('class', 'container');
           document.body.appendChild(container);

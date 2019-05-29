@@ -1,0 +1,7 @@
+SELECT NULL FROM ;
+DECLARE
+BEGIN
+   NULL;
+   IF TRUE
+   THEN
+      NULL;
