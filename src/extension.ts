@@ -95,6 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
         node.active = false;
       }
       activeConnection = node.connection;
+      langClient.sendNotification("activateConnection", activeConnection);
       treeDataProvider.refresh(node);
     }
   }));
