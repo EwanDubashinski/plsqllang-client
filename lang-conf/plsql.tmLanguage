@@ -359,6 +359,16 @@
             <string>string.quoted.double.oracle</string>
         </dict>
         <dict>
+            <key>begin</key>
+            <!-- <string>(?i)(q'\[)</string> -->
+            <string>(?i)(q'(\[|\(|\{))</string>
+            <key>end</key>
+            <!-- <string>(]')</string> -->
+            <string>(\}|\)|\])'</string>
+            <key>name</key>
+            <string>string.quoted.other.oracle</string>
+        </dict>
+        <dict>
             <key>match</key>
             <string>(?i)\b(char|varchar|varchar2|nchar|nvarchar2|boolean|date|timestamp(\s+with(\s+local)?\s+time\s+zone)?|interval\s*day(\(\d*\))?\s*to\s*month|interval\s*year(\(\d*\))?\s*to\s*second(\(\d*\))?|xmltype|blob|clob|nclob|bfile|long|long\s+raw|raw|number|integer|decimal|smallint|float|binary_(float|double|integer)|pls_(float|double|integer)|rowid|urowid|vararray|natural|naturaln|positive|positiven|signtype|simple_(float|double|integer))\b</string>
             <key>name</key>

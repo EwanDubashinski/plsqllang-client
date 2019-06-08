@@ -12,11 +12,10 @@ describe('Should get diagnostics', () => {
   console.log(docUri);
 
 
-  it('Diagnoses uppercase texts', async () => {
+  it('Diagnoses incomplete PL/SQL block', async () => {
     await testDiagnostics(docUri, [
-      { message: "extraneous input ';' expecting", range: toRange(0, 18, 0, 19), severity: vscode.DiagnosticSeverity.Error, source: 'ex' },
-      { message: "mismatched input '<EOF>' expecting {'ELSE', 'ELSIF', 'END'}", range: toRange(7, 1, 7, 2), severity: vscode.DiagnosticSeverity.Error, source: 'ex' },
-      { message: "mismatched input '<EOF>' expecting {'END', 'EXCEPTION'}", range: toRange(7, 1, 7, 2), severity: vscode.DiagnosticSeverity.Error, source: 'ex' }
+      { message: "mismatched input '<EOF>' expecting {'ELSE', 'ELSIF', 'END'}", range: toRange(7, 0, 7, 5), severity: vscode.DiagnosticSeverity.Error, source: 'ex' },
+      { message: "mismatched input '<EOF>' expecting {'END', 'EXCEPTION'}", range: toRange(7, 0, 7, 5), severity: vscode.DiagnosticSeverity.Error, source: 'ex' }
     ])
   })
 })

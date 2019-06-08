@@ -20,6 +20,7 @@ const LANGUAGE_CLIENT_JAVA_START_PATH = 'Starting language server with java path
 let langClient: vscode_languageclient.LanguageClient;
 let activeConnection: string;
 let treeDataProvider: DBTreeDataProvider;
+let output: vscode.OutputChannel;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -35,14 +36,14 @@ export function activate(context: vscode.ExtensionContext) {
   // 2. If the VSCode setting is not defined, use the JAVA_HOME argument
   // 3. If neither of the two properties above are set, show a message to the user
   javaVerifierPromise(vscode.workspace.getConfiguration().get('plsql-lsp.javaHome')).then(
-    function (res) {
+    function (res: any) {
       context.subscriptions.push(initLangClient(serverJarPath, res.toString()).start());
     }
   ).catch(function (rej) {
     console.log(rej);
 
     javaVerifierPromise(process.env['JAVA_HOME']).then(
-      function (res) {
+      function (res: any) {
         let disposable = initLangClient(serverJarPath, res.toString()).start();
         context.subscriptions.push(disposable);
       }
@@ -111,6 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
     await vscode.languages.setTextDocumentLanguage(doc, "plsql");
 
   }));
+  output = window.createOutputChannel("Oracle");
 }
 
 function getWebviewContent(results: string) {
@@ -222,7 +224,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
     //   console.log(e);
     // })
     langClient.onTelemetry((e) => {
-      console.log(e);
+      output.append(e);
     })
 
     console.log("before DBTreeDataProvider");

@@ -6,6 +6,7 @@ BEGIN
          NULL;
       END IF;
    END IF;
+   q'[select 'null' ]'
 
    LOOP
       KSKEHF;
