@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as vscode_languageclient from 'vscode-languageclient';
+import * as vscode_languageclient from 'vscode-languageclient/node';
 
 export enum NodeKind {
    CONNECTION = 'CONNECTION',

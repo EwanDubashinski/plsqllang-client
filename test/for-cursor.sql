@@ -8,7 +8,7 @@ BEGIN
    )
    LOOP
      DBMS_OUTPUT.PUT_LINE
-       (q'['Name' = ]' || item.last_name || ', Job = ' || item.job_id);
+       (q'['Name' = ]' || item.last_name || ', Job = ' || item.job_id)
    END LOOP;
  END;
  /

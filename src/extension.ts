@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as cp from 'child_process';
-import * as vscode_languageclient from 'vscode-languageclient';
+import * as vscode_languageclient from 'vscode-languageclient/node';
 import { commands, window } from 'vscode';
 import * as treeProvider from './treeProvider';
 import { DBTreeDataProvider } from './treeProvider';
@@ -42,6 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
   ).catch(function (rej) {
     console.log(rej);
 
+    // javaVerifierPromise('C:\\Program Files\\Java\\jdk-11.0.10\\').then(
     javaVerifierPromise(process.env['JAVA_HOME']).then(
       function (res: any) {
         let disposable = initLangClient(serverJarPath, res.toString()).start();
@@ -83,9 +84,9 @@ export function activate(context: vscode.ExtensionContext) {
       const params = { connection: conn, name: path[2], type: path[1] };
       return langClient.sendRequest<string>("getDDL", JSON.stringify(params)).then((e) => {
         return JSON.parse(e).ddl;
-      });;
+      });
     }
-  }
+  };
   context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(myScheme, myProvider));
 
   context.subscriptions.push(vscode.commands.registerCommand('plsql-lsp.activateConnection', async (node: treeProvider.DBNode) => {
@@ -142,7 +143,7 @@ function getWebviewContent(results: string) {
     </head>
       <body>
         <script>
-          let array = ` + results + `;
+          let array = ${results};
           let container = document.createElement('div');
           container.setAttribute('class', 'container');
           document.body.appendChild(container);
@@ -167,8 +168,8 @@ function getQueryResults(panel: vscode.WebviewPanel) {
 
   const editor = vscode.window.activeTextEditor;
   if (editor) {
-    query = editor.document.getText(editor.selection)
-    if (!query) query = editor.document.getText();
+    query = editor.document.getText(editor.selection);
+    if (!query) { query = editor.document.getText(); }
   }
   if (query) {
     const params = { connection: activeConnection, query: query };
@@ -198,13 +199,22 @@ function initLangClient(serverJarPath: string, javaPath: string) {
 
   // Create the server options used for the vscode_languageclient.LanguageClient
   // Note: the server will be started by the client
-  let serverOptions = {
+  let serverOptions:vscode_languageclient.ServerOptions = {
     command: javaPath,
     args: ['-jar', serverJarPath],
-    options: { stdio: 'pipe' }
+    // options: { stdio: 'pipe' }
   };
 
+  let debugOptions:vscode_languageclient.ServerOptions = {
+    command: javaPath,
+    args: ['-agentlib:jdwp=transport=dt_shmem,server=y,suspend=y,address=8765,quiet=y', '-jar', serverJarPath],
+    // args: ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005,quiet=y', '-jar', serverJarPath],
+    // options: { stdio: 'pipe' }
+  };
+  // console.log(debugOptions);
+
   langClient = new vscode_languageclient.LanguageClient(LANGUAGE_CLIENT_ID, LANGUAGE_CLIENT_NAME, serverOptions, clientOptions, true);
+  // langClient = new vscode_languageclient.LanguageClient(LANGUAGE_CLIENT_ID, LANGUAGE_CLIENT_NAME, debugOptions, clientOptions, false);
 
   // langClient.on
 
@@ -225,7 +235,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
     // })
     langClient.onTelemetry((e) => {
       output.append(e);
-    })
+    });
 
     console.log("before DBTreeDataProvider");
 
@@ -281,7 +291,8 @@ function javaVerifierPromise(testPath: string | undefined) {
             resolve(pathToJavaExec);
           }
           else {
-            reject(LANGUAGE_CLIENT_JAVA_INVALID_VERSION);
+            resolve(pathToJavaExec);
+            // reject(LANGUAGE_CLIENT_JAVA_INVALID_VERSION);
           }
         }
       });
