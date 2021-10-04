@@ -3,7 +3,7 @@
    "name": "plsql-lsp",
    "displayName": "plsql-lsp",
    "description": "PLSQL language server",
-   "version": "0.0.1",
+   "version": "0.0.2",
    "engines": {
       "vscode": "^1.57.0"
    },
@@ -38,6 +38,7 @@
             "aliases": [
                "PLSQL",
                "PL/SQL",
+               "pl/sql",
                "plsql"
             ],
             "extensions": [
@@ -146,7 +147,10 @@
    "devDependencies": {
       "@types/mocha": "^2.2.42",
       "@types/node": "^10.14.8",
-      "@types/vscode": "^1.57.0",
+
+      "@vscode/test-electron": "1.6.2",
+      "vscode": "^1.1.37",
+      "jest": "^27.2.1",
       "js-yaml": "^3.13.1",
       "tslint": "^5.17.0",
       "typescript": "^3.5.1"
