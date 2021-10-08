@@ -1,7 +1,11 @@
-# Change Log
-All notable changes to the "plsql-lsp" extension will be documented in this file.
+# Changelog
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.0.3] - October 06, 2021
+### Added
+- Syntax check for Oracle PL/SQL, SQL and `sqlplus`
 
-## [Unreleased]
-- Initial release
+### Removed
+- Oracle DB Explorer
+- Symbols provider
+- Completions provider
+- Execute SQL

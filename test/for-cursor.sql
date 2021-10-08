@@ -10,6 +10,6 @@ BEGIN
      DBMS_OUTPUT.PUT_LINE
        (q'['Name' = ]' || item.last_name || ', Job = ' || item.job_id);
    END LOOP;
-   INSERT INTO x VALUES y RETURNING x.id into ls;
+   INSERT INTO x VALUES y RETURNING x.id into ls
  END;
  /
