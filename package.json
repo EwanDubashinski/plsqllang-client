@@ -1,37 +1,33 @@
 {
-   "publisher": "chufeng",
-   "name": "plsql-lsp",
-   "displayName": "plsql-lsp",
-   "description": "PLSQL language server",
-   "version": "0.0.2",
+   "publisher": "EwanDubashinski",
+   "name": "plsqllint",
+   "displayName": "PL/SQL Linter",
+   "description": "PL/SQL Linter (Syntax checker)",
+   "version": "0.0.3",
+   "icon": "media/icon.png",
    "engines": {
       "vscode": "^1.57.0"
    },
    "categories": [
-      "Programming Languages"
+      "Programming Languages",
+      "Linters"
    ],
    "activationEvents": [
       "onLanguage:plsql"
    ],
    "main": "./out/extension.js",
    "contributes": {
-      "viewsContainers": {
-         "activitybar": [
-            {
-               "id": "oracledb-explorer",
-               "title": "Oracle DB Explorer",
-               "icon": "media/oracle.svg"
+      "configuration": [
+         {
+            "title": "PL/SQL Linter",
+            "properties": {
+               "plsqllint.javaHome": {
+                  "type": "string",
+                  "description": "Path to JAVA_HOME, used for extension"
+               }
             }
-         ]
-      },
-      "views": {
-         "oracledb-explorer": [
-            {
-               "id": "dbObjects",
-               "name": "Database Objects"
-            }
-         ]
-      },
+         }
+      ],
       "languages": [
          {
             "id": "plsql",
@@ -71,63 +67,6 @@
             ],
             "configuration": "./lang-conf/plsql.configuration.json"
          }
-      ],
-      "grammars": [
-         {
-            "language": "plsql",
-            "scopeName": "source.plsql.oracle",
-            "path": "./lang-conf/plsql.tmLanguage"
-         }
-      ],
-      "snippets": [
-         {
-            "language": "plsql",
-            "path": "./lang-conf/snippets.json"
-         }
-      ],
-      "commands": [
-         {
-            "command": "plsql-lsp.exec",
-            "title": "PLSQL - run current command"
-         },
-         {
-            "command": "plsql-lsp.activateConnection",
-            "title": "Activate connection"
-         },
-         {
-            "command": "oraddl.test",
-            "title": "Oracle: get DDL",
-            "icon": {
-               "light": "resources/light/document.svg",
-               "dark": "resources/dark/document.svg"
-            }
-         }
-      ],
-      "keybindings": {
-         "command": "plsql-lsp.exec",
-         "when": "resourceLangId == plsql && editorTextFocus",
-         "key": "ctrl+enter"
-      },
-      "menus": {
-         "view/item/context": [
-            {
-               "command": "oraddl.test",
-               "when": "view == dbObjects && viewItem == OBJECT",
-               "group": "inline"
-            }
-         ]
-      },
-      "configuration": [
-         {
-            "title": "Oracle configuration",
-            "properties": {
-               "plsql-lsp.connectionStrings": {
-                  "type": "array",
-                  "required": false,
-                  "description": "connection string like user/password@host:port/sid"
-               }
-            }
-         }
       ]
    },
    "scripts": {
@@ -142,12 +81,12 @@
    },
    "repository": {
       "url": "https://github.com/EwanDubashinski/plsqllang-client",
-      "type": "github"
+      "type": "git"
    },
+   "license": "http://www.apache.org/licenses/LICENSE-2.0",
    "devDependencies": {
       "@types/mocha": "^2.2.42",
       "@types/node": "^10.14.8",
-
       "@vscode/test-electron": "1.6.2",
       "vscode": "^1.1.37",
       "jest": "^27.2.1",
