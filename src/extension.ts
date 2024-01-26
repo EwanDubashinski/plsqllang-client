@@ -22,7 +22,7 @@ let output: vscode.OutputChannel;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   output = window.createOutputChannel(LANGUAGE_CLIENT_NAME);
   console.log(EXTENSION_START_MSG);
   let serverJarPath = context.asAbsolutePath(path.join('server', 'server-all.jar'));
@@ -33,28 +33,29 @@ export function activate(context: vscode.ExtensionContext) {
   // has not specified it in the workspace, it will look at the global settings after
   // 2. If the VSCode setting is not defined, use the JAVA_HOME argument
   // 3. If neither of the two properties above are set, show a message to the user
-  javaVerifierPromise(vscode.workspace.getConfiguration().get('plsqllint.javaHome')).then(
-    function (res: any) {
-      context.subscriptions.push(initLangClient(serverJarPath, res.toString()).start());
-    }
-  ).catch(function (rej) {
-    output.appendLine(rej);
-
-    // javaVerifierPromise('C:\\Program Files\\Java\\jdk-11.0.10\\').then(
+  try {
+    const res = await javaVerifierPromise(vscode.workspace.getConfiguration().get('plsqllint.javaHome'))
+    initLangClient(serverJarPath, res);
+  } catch (e: any) {
+    output.appendLine(e);
     javaVerifierPromise(process.env['JAVA_HOME']).then(
-      function (res: any) {
-        let disposable = initLangClient(serverJarPath, res.toString()).start();
-        context.subscriptions.push(disposable);
+      async function (res: any) {
+    initLangClient(serverJarPath, res.toString());
+        await langClient.start();
+        langClient.onTelemetry((e) => {
+          output.appendLine(e);
+        });
+        output.appendLine(LANGUAGE_CLIENT_READY_MSG);
       }
     ).catch(function (rej) {
       output.appendLine(rej);
 
       vscode.window.showWarningMessage(LANGUAGE_CLIENT_JAVA_WARNING);
     });
-  });
+  }
 }
 
-function initLangClient(serverJarPath: string, javaPath: string) {
+async function initLangClient(serverJarPath: string, javaPath: string) {
   console.log(LANGUAGE_CLIENT_JAVA_START_PATH + javaPath);
 
   // Create the client options used for the vscode_languageclient.LanguageClient
@@ -93,29 +94,12 @@ function initLangClient(serverJarPath: string, javaPath: string) {
 
   // let item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, Number.MIN_VALUE);
   output.appendLine (LANGUAGE_CLIENT_STARTING_MSG);
-  // toggleItem(vscode.window.activeTextEditor, item);
 
-  langClient.onReady().then(() => {
-    // langClient.onNotification("traceMsg", function(e) {
-    //   console.log(e);
-    // })
-    langClient.onTelemetry((e) => {
-      output.appendLine(e);
-    });
-
-    output.appendLine(LANGUAGE_CLIENT_READY_MSG);
-
-    // item.text = LANGUAGE_CLIENT_READY_MSG;
-    // toggleItem(vscode.window.activeTextEditor, item);
-
-    // window.onDidChangeActiveTextEditor((editor) => {
-    //   toggleItem(editor, item);
-    // });
+  await langClient.start();
+  langClient.onTelemetry((e) => {
+    output.appendLine(e);
   });
-
-
-
-  return langClient;
+  output.appendLine(LANGUAGE_CLIENT_READY_MSG);
 }
 
 
@@ -128,7 +112,7 @@ function initLangClient(serverJarPath: string, javaPath: string) {
 //   }
 // }
 
-function javaVerifierPromise(testPath: string | undefined) {
+function javaVerifierPromise(testPath: string | undefined): Promise<string> {
   return new Promise(function (resolve, reject) {
     if (!testPath) {
       reject(LANGUAGE_CLIENT_JAVA_VSCODE_SETTING_NULL);
@@ -153,4 +137,6 @@ function javaVerifierPromise(testPath: string | undefined) {
   });
 }
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  langClient.stop();
+}

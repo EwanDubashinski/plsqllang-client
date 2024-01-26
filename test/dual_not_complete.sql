@@ -1,4 +1,5 @@
 DECLARE
+x NUMBER;
 BEGIN
    IF DDD THEN
       NULL;
@@ -6,7 +7,7 @@ BEGIN
          NULL;
       END IF;
    END IF;
-   q'[select 'null' ]'
+   x := q'[select 'null' ]';
 
    LOOP
       KSKEHF;
