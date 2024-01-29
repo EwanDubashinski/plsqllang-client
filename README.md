@@ -4,22 +4,26 @@ This extension uses ANTLR4 PL/SQL grammar for syntax checking.
 
 ## Features
 
-* PL/SQL and SQL linter, based on ANTLR PL/SQL grammar
-
-* Everything else was removed in favor to use this extension with other PL/SQL extensions
+* PL/SQL and SQL syntax checking, based on ANTLR PL/SQL grammar
 
 ## Dependencies
 
-Java 1.8+ must be installed. By default uses Java from `JAVA_HOME` environment variable. Another Java home can be specified in extension setting `plsqllint.javaHome`.
+Java 1.8+ must be installed. 
+
+By default uses Java from `JAVA_HOME` environment variable. 
+
+Another Java home can be specified in extension setting `plsqllint.javaHome`.
 
 ## Release Notes
 
-Initial release of extension
+Updated grammar; server's and client's dependencies.
 
 ## Roadmap
 
-In plans adding static code analysis features, context actions on errors or warnings, better support of last versions of PL/SQL and SQL, and more.
+Better support of new versions of PL/SQL and SQL
 
 ### For more information
 
+* [PL/SQL LSP Server](https://github.com/EwanDubashinski/plsqllang-server)
+* [PL/SQL lexer/parser](https://github.com/EwanDubashinski/parser)
 * [ANTLR PL/SQL grammar](https://github.com/antlr/grammars-v4/tree/master/sql/plsql)
