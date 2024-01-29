@@ -1,4 +1,4 @@
-# Oracle PL/SQL Linter
+# PL/SQL Linter
 
 This extension uses ANTLR4 PL/SQL grammar for syntax checking.
 
