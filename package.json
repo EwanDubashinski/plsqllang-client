@@ -3,7 +3,7 @@
    "name": "plsqllint",
    "displayName": "PL/SQL Linter",
    "description": "PL/SQL Linter (Syntax checker)",
-   "version": "0.0.4",
+   "version": "0.0.6",
    "icon": "media/icon.png",
    "engines": {
       "vscode": "^1.75.0"

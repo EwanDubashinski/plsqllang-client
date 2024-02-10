@@ -4,3 +4,4 @@ node_modules
 *.vsix
 server/trace_plsql_server.log
 *.log
+.DS_Store
